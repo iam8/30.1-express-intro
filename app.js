@@ -3,6 +3,7 @@
 
 /** Application for calculating the mean, median, or mode of a list of numbers.
  *
+ * TODO: place the identical try/catch blocks in helper function
  *
 */
 
@@ -20,6 +21,73 @@ function areAllNumbers(array) {
     return array.every((element) => {
         return !isNaN(+element);
     })
+}
+
+/**
+ * Calculate the mean of an array of numbers.
+ */
+function calculateMean(nums) {
+    let sum;
+
+    // Calculate sum of the array
+    sum = nums.reduce((accum, curr) => {
+        return accum + (+curr);
+    }, 0);
+
+    return sum / nums.length;
+}
+
+/**
+ * Calculate the median of an array of numbers.
+ */
+function calculateMedian(nums) {
+
+    // Sort array: ascending order
+    nums.sort((a, b) => {return a - b});
+
+    // Find middle value in nums list
+    let midVal;
+
+    if (nums.length % 2 === 1) {
+
+        // Case: odd-length nums list
+        midVal = +nums[Math.floor(nums.length / 2)];
+    } else {
+
+        // Case: even-length nums list
+        const midVal1 = +nums[nums.length / 2 - 1];
+        const midVal2 = +nums[nums.length / 2];
+
+        midVal = (midVal1 + midVal2) / 2;
+    }
+
+    return midVal;
+}
+
+/**
+ * Calculate the mode of an array of numbers.
+ */
+function calculateMode(nums) {
+    const freqMap = new Map();
+    let mode = +nums[0];
+
+    // Map each number to its frequency
+    for (let num of nums) {
+        const freq = freqMap.get(+num);
+
+        if (freq === undefined) {
+            freqMap.set(+num, 1);
+        } else {
+            freqMap.set(+num, freq + 1);
+        }
+
+        // Update mode
+        if (freqMap.get(+num) > mode) {
+            mode = +num;
+        }
+    }
+
+    return mode;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -50,16 +118,11 @@ app.get("/mean", (req, res, next) => {
         return next(err);
     }
 
-    let sum;
-
-    // Calculate sum of the nums
-    sum = nums.reduce((accum, curr) => {
-        return accum + (+curr);
-    }, 0);
+    const mean = calculateMean(nums);
 
     return res.json({
         operation: "mean",
-        value: sum / nums.length
+        value: mean
     });
 })
 
@@ -86,25 +149,11 @@ app.get("/median", (req, res, next) => {
         return next(err);
     }
 
-    // Find middle value in nums list
-    let midVal;
-
-    if (nums.length % 2 === 1) {
-
-        // Case: odd-length nums list
-        midVal = nums[Math.floor(nums.length / 2)];
-    } else {
-
-        // Case: even-length nums list
-        const midVal1 = +nums[nums.length / 2 - 1];
-        const midVal2 = +nums[nums.length / 2];
-
-        midVal = (midVal1 + midVal2) / 2;
-    }
+    const median = calculateMedian(nums);
 
     return res.json({
         operation: "median",
-        value: +midVal
+        value: median
     });
 })
 
@@ -131,28 +180,30 @@ app.get("/mode", (req, res, next) => {
         return next(err);
     }
 
-    const freqMap = new Map();
-    let mode = nums[0];
+    // const freqMap = new Map();
+    // let mode = nums[0];
 
-    // Map each number to its frequency
-    for (let num of nums) {
-        const freq = freqMap.get(num);
+    // // Map each number to its frequency
+    // for (let num of nums) {
+    //     const freq = freqMap.get(num);
 
-        if (freq === undefined) {
-            freqMap.set(num, 1);
-        } else {
-            freqMap.set(num, freq + 1);
-        }
+    //     if (freq === undefined) {
+    //         freqMap.set(num, 1);
+    //     } else {
+    //         freqMap.set(num, freq + 1);
+    //     }
 
-        // Update mode
-        if (freqMap.get(num) > mode) {
-            mode = num;
-        }
-    }
+    //     // Update mode
+    //     if (freqMap.get(num) > mode) {
+    //         mode = num;
+    //     }
+    // }
+
+    const mode = calculateMode(nums);
 
     return res.json({
         operation: "mode",
-        value: +mode
+        value: mode
     });
 })
 
