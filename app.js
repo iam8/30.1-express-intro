@@ -3,7 +3,8 @@
 
 /** Application for calculating the mean, median, or mode of a list of numbers.
  *
- * TODO: place the identical try/catch blocks in helper function
+ * TODO: Place only the code inside the try block in the validateQueryString function, not the
+ * entire try/catch construct
  *
 */
 
@@ -90,24 +91,26 @@ function calculateMode(nums) {
     return mode;
 }
 
-// ------------------------------------------------------------------------------------------------
-
-
-// ROUTES -----------------------------------------------------------------------------------------
-
-app.get("/mean", (req, res, next) => {
-
-    const queryStr = req.query["nums"];
-    let nums;
+/**
+ * Validate 'nums' query string argument. This argument must:
+ * - Exist,
+ * - Be nonempty,
+ * - Contain only numbers, separated by commas (ex. nums=1,2,3,4).
+ *
+ * Throw an ExpressError if any of the above conditions are not met.
+ *
+ * The 'next' argument must be a NextFunction provided by Express.
+ */
+function validateQueryString(qString, next) {
 
     try {
 
         // Case: query string empty or missing
-        if (!queryStr) {
+        if (!qString) {
             throw new ExpressError("Query parameter 'nums' is required.", 400);
         }
 
-        nums = queryStr.split(",");
+        const nums = qString.split(",");
 
         // Case: one or more nums elements cannot be converted to a number
         if (!areAllNumbers(nums)) {
@@ -117,7 +120,19 @@ app.get("/mean", (req, res, next) => {
     } catch(err) {
         return next(err);
     }
+}
 
+// ------------------------------------------------------------------------------------------------
+
+
+// ROUTES -----------------------------------------------------------------------------------------
+
+app.get("/mean", (req, res, next) => {
+
+    const qString = req.query["nums"];
+    validateQueryString(qString, next);
+
+    let nums = qString.split(",");
     const mean = calculateMean(nums);
 
     return res.json({
@@ -128,27 +143,10 @@ app.get("/mean", (req, res, next) => {
 
 app.get("/median", (req, res, next) => {
 
-    const queryStr = req.query["nums"];
-    let nums;
+    const qString = req.query["nums"];
+    validateQueryString(qString, next);
 
-    try {
-
-        // Case: query string empty or missing
-        if (!queryStr) {
-            throw new ExpressError("Query parameter 'nums' is required.", 400);
-        }
-
-        nums = queryStr.split(",");
-
-        // Case: one or more nums elements cannot be converted to a number
-        if (!areAllNumbers(nums)) {
-            throw new ExpressError("Nums must contain only numbers.", 400);
-        }
-
-    } catch(err) {
-        return next(err);
-    }
-
+    let nums = qString.split(",");
     const median = calculateMedian(nums);
 
     return res.json({
@@ -159,46 +157,10 @@ app.get("/median", (req, res, next) => {
 
 app.get("/mode", (req, res, next) => {
 
-    const queryStr = req.query["nums"];
-    let nums;
+    const qString = req.query["nums"];
+    validateQueryString(qString, next);
 
-    try {
-
-        // Case: query string empty or missing
-        if (!queryStr) {
-            throw new ExpressError("Query parameter 'nums' is required.", 400);
-        }
-
-        nums = queryStr.split(",");
-
-        // Case: one or more nums elements cannot be converted to a number
-        if (!areAllNumbers(nums)) {
-            throw new ExpressError("Nums must contain only numbers.", 400);
-        }
-
-    } catch(err) {
-        return next(err);
-    }
-
-    // const freqMap = new Map();
-    // let mode = nums[0];
-
-    // // Map each number to its frequency
-    // for (let num of nums) {
-    //     const freq = freqMap.get(num);
-
-    //     if (freq === undefined) {
-    //         freqMap.set(num, 1);
-    //     } else {
-    //         freqMap.set(num, freq + 1);
-    //     }
-
-    //     // Update mode
-    //     if (freqMap.get(num) > mode) {
-    //         mode = num;
-    //     }
-    // }
-
+    let nums = qString.split(",");
     const mode = calculateMode(nums);
 
     return res.json({
