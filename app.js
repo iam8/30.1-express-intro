@@ -96,14 +96,12 @@ function calculateMode(nums) {
  */
 function validateQueryString(qString) {
 
-    // Case: query string empty or missing
     if (!qString) {
         throw new ExpressError("Query parameter 'nums' is required.", 400);
     }
 
     const nums = qString.split(",");
 
-    // Case: one or more nums elements cannot be converted to a number
     if (!areAllNumbers(nums)) {
         throw new ExpressError("Nums must contain only numbers.", 400);
     }
