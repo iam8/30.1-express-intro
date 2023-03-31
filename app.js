@@ -15,6 +15,15 @@ const ExpressError = require("./expressError");
 
 // HELPERS ----------------------------------------------------------------------------------------
 
+/**
+ * Return true if all elements in the given array are numbers and false otherwise.
+ */
+function areAllNumbers(array) {
+    return array.every((element) => {
+        return !isNaN(+element);
+    })
+}
+
 // ------------------------------------------------------------------------------------------------
 
 
