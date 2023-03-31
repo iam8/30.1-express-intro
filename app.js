@@ -1,7 +1,12 @@
 // Ioana A Mititean
 // Exercise 30.1 - Express Routing/Calculator Exercise
 
-/** Application for calculating the mean, median, or mode of a list of numbers. */
+/** Application for calculating the mean, median, or mode of a list of numbers.
+ *
+ * TODO: use every() or some() function to check that all query params are numbers; put this into
+ * a helper function.
+ *
+*/
 
 const express = require("express");
 const app = express();
@@ -15,7 +20,7 @@ app.get("/mean", (req, res, next) => {
     try {
         // Case: empty or missing query string
         if (!queryStr) {
-            throw new ExpressError("Query parameter 'num' is required.", 400);
+            throw new ExpressError("Query parameter 'nums' is required.", 400);
         }
 
     } catch(err) {
@@ -45,8 +50,53 @@ app.get("/mean", (req, res, next) => {
     });
 })
 
-app.get("/median", (req, res) => {
-    return res.send("You have reached the median page");
+app.get("/median", (req, res, next) => {
+
+    const queryStr = req.query["nums"];
+
+    try {
+        // Case: empty or missing query string
+        if (!queryStr) {
+            throw new ExpressError("Query parameter 'nums' is required.", 400);
+        }
+
+    } catch(err) {
+        return next(err);
+    }
+
+    const nums = queryStr.split(",");
+
+    // Find middle value in nums list
+    let midVal;
+
+    if (nums.length % 2 === 1) {
+
+        // Case: odd-length nums list
+        midVal = nums[Math.floor(nums.length / 2)];
+    } else {
+
+        // Case: even-length nums list
+        const midVal1 = +nums[nums.length / 2 - 1];
+        const midVal2 = +nums[nums.length / 2];
+
+        midVal = (midVal1 + midVal2) / 2;
+    }
+
+    midVal = +midVal;
+
+    try {
+        if (isNaN(midVal)) {
+            throw new ExpressError("Nums must contain only numbers.", 400);
+        }
+
+    } catch(err) {
+        return next(err);
+    }
+
+    return res.json({
+        operation: "median",
+        value: midVal
+    });
 })
 
 app.get("/mode", (req, res) => {
