@@ -5,17 +5,20 @@
 
 const express = require("express");
 const app = express();
+const ExpressError = require("./expressError");
 
 
 app.get("/mean", (req, res) => {
 
     const queryStr = req.query["nums"];
 
-    // Case: empty or missing query string
-    if (!queryStr) {
-        return res.status(400).json({
-            message: "Query parameter 'nums' is required."
-        })
+    try {
+        // Case: empty or missing query string
+        if (!queryStr) {
+            throw new ExpressError("Query parameter 'num' is required.", 400);
+        }
+    } catch(err) {
+        return next(err);
     }
 
     const nums = queryStr.split(",");
@@ -40,8 +43,22 @@ app.get("/mode", (req, res) => {
 })
 
 
+// Handler for 404 errors
+app.use((req, res, next) => {
+    const notFoundError = new ExpressError("Page not found!", 404);
+    return next(notFoundError);
+})
 
+// Global error handler
+app.use((err, req, res, next) => {
+    const status = err.status || 500;
+    const message = err.message;
 
+    // Set status and alert the user
+    return res.status(status).json({
+        error: {message, status}
+    })
+})
 
 app.listen(3000, "127.0.0.1", () => {
     console.log("App running on 127.0.0.1, port 3000");
