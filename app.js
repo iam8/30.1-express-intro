@@ -1,6 +1,8 @@
 // Ioana A Mititean
 // Exercise 30.1 - Express Routing/Calculator Exercise
 
+/** Application for calculating the mean, median, or mode of a list of numbers. */
+
 const express = require("express");
 const app = express();
 
@@ -11,9 +13,8 @@ app.get("/mean", (req, res) => {
 
     // Case: empty or missing query string
     if (!queryStr) {
-        return res.json({
-            operation: "mean",
-            value: "None"
+        return res.status(400).json({
+            message: "Query parameter 'nums' is required."
         })
     }
 
