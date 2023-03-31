@@ -1,12 +1,7 @@
 // Ioana A Mititean
 // Exercise 30.1 - Express Routing/Calculator Exercise
 
-/** Application for calculating the mean, median, or mode of a list of numbers.
- *
- * TODO: Place only the code inside the try block in the validateQueryString function, not the
- * entire try/catch construct
- *
-*/
+/** Application for calculating the mean, median, or mode of a list of numbers. */
 
 const express = require("express");
 const app = express();
@@ -83,7 +78,7 @@ function calculateMode(nums) {
         }
 
         // Update mode
-        if (freqMap.get(+num) > mode) {
+        if (freqMap.get(+num) > freqMap.get(mode)) {
             mode = +num;
         }
     }
@@ -98,27 +93,19 @@ function calculateMode(nums) {
  * - Contain only numbers, separated by commas (ex. nums=1,2,3,4).
  *
  * Throw an ExpressError if any of the above conditions are not met.
- *
- * The 'next' argument must be a NextFunction provided by Express.
  */
-function validateQueryString(qString, next) {
+function validateQueryString(qString) {
 
-    try {
+    // Case: query string empty or missing
+    if (!qString) {
+        throw new ExpressError("Query parameter 'nums' is required.", 400);
+    }
 
-        // Case: query string empty or missing
-        if (!qString) {
-            throw new ExpressError("Query parameter 'nums' is required.", 400);
-        }
+    const nums = qString.split(",");
 
-        const nums = qString.split(",");
-
-        // Case: one or more nums elements cannot be converted to a number
-        if (!areAllNumbers(nums)) {
-            throw new ExpressError("Nums must contain only numbers.", 400);
-        }
-
-    } catch(err) {
-        return next(err);
+    // Case: one or more nums elements cannot be converted to a number
+    if (!areAllNumbers(nums)) {
+        throw new ExpressError("Nums must contain only numbers.", 400);
     }
 }
 
@@ -130,7 +117,12 @@ function validateQueryString(qString, next) {
 app.get("/mean", (req, res, next) => {
 
     const qString = req.query["nums"];
-    validateQueryString(qString, next);
+
+    try {
+        validateQueryString(qString);
+    } catch(err) {
+        return next(err);
+    }
 
     let nums = qString.split(",");
     const mean = calculateMean(nums);
@@ -144,7 +136,12 @@ app.get("/mean", (req, res, next) => {
 app.get("/median", (req, res, next) => {
 
     const qString = req.query["nums"];
-    validateQueryString(qString, next);
+
+    try {
+        validateQueryString(qString);
+    } catch(err) {
+        return next(err);
+    }
 
     let nums = qString.split(",");
     const median = calculateMedian(nums);
@@ -158,7 +155,12 @@ app.get("/median", (req, res, next) => {
 app.get("/mode", (req, res, next) => {
 
     const qString = req.query["nums"];
-    validateQueryString(qString, next);
+
+    try {
+        validateQueryString(qString);
+    } catch(err) {
+        return next(err);
+    }
 
     let nums = qString.split(",");
     const mode = calculateMode(nums);
