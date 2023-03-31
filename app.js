@@ -3,8 +3,6 @@
 
 /** Application for calculating the mean, median, or mode of a list of numbers.
  *
- * TODO: use every() or some() function to check that all query params are numbers; put this into
- * a helper function.
  *
 */
 
@@ -32,33 +30,32 @@ function areAllNumbers(array) {
 app.get("/mean", (req, res, next) => {
 
     const queryStr = req.query["nums"];
+    let nums;
 
     try {
-        // Case: empty or missing query string
+
+        // Case: query string empty or missing
         if (!queryStr) {
             throw new ExpressError("Query parameter 'nums' is required.", 400);
         }
 
-    } catch(err) {
-        return next(err);
-    }
+        nums = queryStr.split(",");
 
-    const nums = queryStr.split(",");
-    let sum;
-
-    // Calculate sum of the nums
-    sum = nums.reduce((accum, curr) => {
-        return accum + (+curr);
-    }, 0);
-
-    try {
-        if (isNaN(sum)) {
+        // Case: one or more nums elements cannot be converted to a number
+        if (!areAllNumbers(nums)) {
             throw new ExpressError("Nums must contain only numbers.", 400);
         }
 
     } catch(err) {
         return next(err);
     }
+
+    let sum;
+
+    // Calculate sum of the nums
+    sum = nums.reduce((accum, curr) => {
+        return accum + (+curr);
+    }, 0);
 
     return res.json({
         operation: "mean",
@@ -69,18 +66,25 @@ app.get("/mean", (req, res, next) => {
 app.get("/median", (req, res, next) => {
 
     const queryStr = req.query["nums"];
+    let nums;
 
     try {
-        // Case: empty or missing query string
+
+        // Case: query string empty or missing
         if (!queryStr) {
             throw new ExpressError("Query parameter 'nums' is required.", 400);
+        }
+
+        nums = queryStr.split(",");
+
+        // Case: one or more nums elements cannot be converted to a number
+        if (!areAllNumbers(nums)) {
+            throw new ExpressError("Nums must contain only numbers.", 400);
         }
 
     } catch(err) {
         return next(err);
     }
-
-    const nums = queryStr.split(",");
 
     // Find middle value in nums list
     let midVal;
@@ -98,10 +102,28 @@ app.get("/median", (req, res, next) => {
         midVal = (midVal1 + midVal2) / 2;
     }
 
-    midVal = +midVal;
+    return res.json({
+        operation: "median",
+        value: +midVal
+    });
+})
+
+app.get("/mode", (req, res, next) => {
+
+    const queryStr = req.query["nums"];
+    let nums;
 
     try {
-        if (isNaN(midVal)) {
+
+        // Case: query string empty or missing
+        if (!queryStr) {
+            throw new ExpressError("Query parameter 'nums' is required.", 400);
+        }
+
+        nums = queryStr.split(",");
+
+        // Case: one or more nums elements cannot be converted to a number
+        if (!areAllNumbers(nums)) {
             throw new ExpressError("Nums must contain only numbers.", 400);
         }
 
@@ -109,27 +131,6 @@ app.get("/median", (req, res, next) => {
         return next(err);
     }
 
-    return res.json({
-        operation: "median",
-        value: midVal
-    });
-})
-
-app.get("/mode", (req, res, next) => {
-
-    const queryStr = req.query["nums"];
-
-    try {
-        // Case: empty or missing query string
-        if (!queryStr) {
-            throw new ExpressError("Query parameter 'nums' is required.", 400);
-        }
-
-    } catch(err) {
-        return next(err);
-    }
-
-    const nums = queryStr.split(",");
     const freqMap = new Map();
     let mode = nums[0];
 
@@ -149,20 +150,9 @@ app.get("/mode", (req, res, next) => {
         }
     }
 
-    mode = +mode;
-
-    try {
-        if (isNaN(mode)) {
-            throw new ExpressError("Nums must contain only numbers.", 400);
-        }
-
-    } catch(err) {
-        return next(err);
-    }
-
     return res.json({
         operation: "mode",
-        value: mode
+        value: +mode
     });
 })
 
