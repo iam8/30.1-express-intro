@@ -8,7 +8,7 @@ const app = express();
 const ExpressError = require("./expressError");
 
 
-app.get("/mean", (req, res) => {
+app.get("/mean", (req, res, next) => {
 
     const queryStr = req.query["nums"];
 
@@ -17,16 +17,27 @@ app.get("/mean", (req, res) => {
         if (!queryStr) {
             throw new ExpressError("Query parameter 'num' is required.", 400);
         }
+
     } catch(err) {
         return next(err);
     }
 
     const nums = queryStr.split(",");
+    let sum;
 
-    // Calculate sum of the nums
-    const sum = nums.reduce((accum, curr) => {
-        return accum + (+curr);
-    }, 0);
+    try {
+        // Calculate sum of the nums
+        sum = nums.reduce((accum, curr) => {
+            return accum + (+curr);
+        }, 0);
+
+        if (isNaN(sum)) {
+            throw new ExpressError("Nums must contain only numbers.", 400);
+        }
+
+    } catch(err) {
+        return next(err);
+    }
 
     return res.json({
         operation: "mean",
