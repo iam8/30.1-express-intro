@@ -1,0 +1,12 @@
+{
+  "name": "express-intro",
+  "version": "1.0.0",
+  "description": "Code for exercise 30.1 - Express Calculator",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
