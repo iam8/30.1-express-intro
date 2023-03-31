@@ -30,12 +30,12 @@ app.get("/mean", (req, res, next) => {
     const nums = queryStr.split(",");
     let sum;
 
-    try {
-        // Calculate sum of the nums
-        sum = nums.reduce((accum, curr) => {
-            return accum + (+curr);
-        }, 0);
+    // Calculate sum of the nums
+    sum = nums.reduce((accum, curr) => {
+        return accum + (+curr);
+    }, 0);
 
+    try {
         if (isNaN(sum)) {
             throw new ExpressError("Nums must contain only numbers.", 400);
         }
@@ -99,8 +99,55 @@ app.get("/median", (req, res, next) => {
     });
 })
 
-app.get("/mode", (req, res) => {
-    return res.send("You have reached the mode page");
+app.get("/mode", (req, res, next) => {
+
+    const queryStr = req.query["nums"];
+
+    try {
+        // Case: empty or missing query string
+        if (!queryStr) {
+            throw new ExpressError("Query parameter 'nums' is required.", 400);
+        }
+
+    } catch(err) {
+        return next(err);
+    }
+
+    const nums = queryStr.split(",");
+    const freqMap = new Map();
+    let mode = nums[0];
+
+    // Map each number to its frequency
+    for (let num of nums) {
+        const freq = freqMap.get(num);
+
+        if (freq === undefined) {
+            freqMap.set(num, 1);
+        } else {
+            freqMap.set(num, freq + 1);
+        }
+
+        // Update mode
+        if (freqMap.get(num) > mode) {
+            mode = num;
+        }
+    }
+
+    mode = +mode;
+
+    try {
+        if (isNaN(mode)) {
+            throw new ExpressError("Nums must contain only numbers.", 400);
+        }
+
+    } catch(err) {
+        return next(err);
+    }
+
+    return res.json({
+        operation: "mode",
+        value: mode
+    });
 })
 
 
