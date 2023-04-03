@@ -14,6 +14,27 @@ const {
 
 describe("Tests for areAllNumbers function", () => {
 
+    test("Should return false for empty array input", () => {
+        const res = areAllNumbers([]);
+        expect(res).toEqual(false);
+    })
+
+    test("Should return true for all numerical inputs", () => {
+
+    })
+
+    test("Should return true for number string inputs", () => {
+
+    })
+
+    test("Should return false for all non-numerical inputs", () => {
+
+    })
+
+    test("Should return false if only one input is non-numerical", () => {
+
+    })
+
 })
 
 
