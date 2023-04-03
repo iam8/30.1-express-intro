@@ -14,6 +14,11 @@ const ExpressError = require("./expressError");
  * Return true if all elements in the given array are numbers and false otherwise.
  */
 function areAllNumbers(array) {
+
+    if (array.length === 0) {
+        return false;
+    }
+
     return array.every((element) => {
         return !isNaN(+element);
     })
@@ -193,12 +198,8 @@ app.use((err, req, res, next) => {
 
 // ------------------------------------------------------------------------------------------------
 
-
-app.listen(3000, "127.0.0.1", () => {
-    console.log("App running on 127.0.0.1, port 3000");
-})
-
 module.exports = {
+    app,
     areAllNumbers,
     calculateMean,
     calculateMedian,
