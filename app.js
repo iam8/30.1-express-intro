@@ -197,3 +197,11 @@ app.use((err, req, res, next) => {
 app.listen(3000, "127.0.0.1", () => {
     console.log("App running on 127.0.0.1, port 3000");
 })
+
+module.exports = {
+    areAllNumbers,
+    calculateMean,
+    calculateMedian,
+    calculateMode,
+    validateQueryString
+};
