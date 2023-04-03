@@ -44,15 +44,33 @@ describe("Tests for areAllNumbers function", () => {
 
 describe("Tests for calculateMean function", () => {
 
+    test("Should throw ValueError if input array is empty", () => {
+        expect(() => {
+            calculateMean([]);
+        }).toThrow(TypeError);
+    })
+
 })
 
 
 describe("Tests for calculateMedian function", () => {
 
+    test("Should throw ValueError if input array is empty", () => {
+        expect(() => {
+            calculateMedian([]);
+        }).toThrow(TypeError);
+    })
+
 })
 
 
 describe("Tests for calculateMode function", () => {
+
+    test("Should throw ValueError if input array is empty", () => {
+        expect(() => {
+            calculateMode([]);
+        }).toThrow(TypeError);
+    })
 
 })
 
