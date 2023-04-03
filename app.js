@@ -28,6 +28,11 @@ function areAllNumbers(array) {
  * Calculate the mean of an array of numbers.
  */
 function calculateMean(nums) {
+
+    if (nums.length === 0) {
+        throw new TypeError("Input array cannot be empty.");
+    }
+
     let sum;
 
     // Calculate sum of the array
@@ -42,6 +47,10 @@ function calculateMean(nums) {
  * Calculate the median of an array of numbers.
  */
 function calculateMedian(nums) {
+
+    if (nums.length === 0) {
+        throw new TypeError("Input array cannot be empty.");
+    }
 
     // Sort array: ascending order
     nums.sort((a, b) => {return a - b});
@@ -69,6 +78,11 @@ function calculateMedian(nums) {
  * Calculate the mode of an array of numbers.
  */
 function calculateMode(nums) {
+
+    if (nums.length === 0) {
+        throw new TypeError("Input array cannot be empty.");
+    }
+
     const freqMap = new Map();
     let mode = +nums[0];
 
