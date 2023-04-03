@@ -50,6 +50,21 @@ describe("Tests for calculateMean function", () => {
         }).toThrow(TypeError);
     })
 
+    test("Should calculate mean correctly for single element input", () => {
+        const res = calculateMean([1]);
+        expect(res).toEqual(1);
+    })
+
+    test("Should calculate mean correctly for negative number inputs", () => {
+        const res = calculateMean([-10, -5, -1, -100, -2]);
+        expect(res).toEqual(-23.6);
+    })
+
+    test("Should calculate mean correctly for positive number inputs", () => {
+        const res = calculateMean([1, 2, 3, 4, 5, 6]);
+        expect(res).toEqual(3.5);
+    })
+
 })
 
 
