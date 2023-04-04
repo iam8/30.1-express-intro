@@ -8,8 +8,10 @@ const {
     calculateMean,
     calculateMedian,
     calculateMode,
-    validateQueryString
+    validateNumsQueryString
 } = require("./app");
+
+const ExpressError = require("./expressError");
 
 
 describe("Tests for areAllNumbers function", () => {
@@ -133,6 +135,29 @@ describe("Tests for calculateMode function", () => {
 })
 
 
-describe("Tests for validateQueryString function", () => {
+describe("Tests for validateNumsQueryString function", () => {
 
+    test("Should throw an ExpressError if no query string is given", () => {
+        expect(() => {
+            validateNumsQueryString();
+        }).toThrow(ExpressError);
+    })
+
+    test("Should throw an ExpressError if query string is empty", () => {
+        expect(() => {
+            validateNumsQueryString("");
+        }).toThrow(ExpressError);
+    })
+
+    test("Should throw an ExpressError if query string contains a non-numerical element", () => {
+        expect(() => {
+            validateNumsQueryString("1,2,3,string");
+        }).toThrow(ExpressError);
+    })
+
+    test("Should not throw an ExpressError if query string is valid", () => {
+        expect(() => {
+            validateNumsQueryString("1,2,3,4");
+        }).not.toThrow(ExpressError);
+    })
 })
