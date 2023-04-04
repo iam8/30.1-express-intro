@@ -188,6 +188,29 @@ app.get("/mode", (req, res, next) => {
     });
 })
 
+app.get("/all", (req, res, next) => {
+
+    const qString = req.query["nums"];
+
+    try {
+        validateNumsQueryString(qString);
+    } catch(err) {
+        return next(err);
+    }
+
+    let nums = qString.split(",");
+    const mean = calculateMean(nums);
+    const median = calculateMedian(nums);
+    const mode = calculateMode(nums);
+
+    return res.json({
+        operation: "all",
+        mean,
+        median,
+        mode
+    });
+})
+
 // ------------------------------------------------------------------------------------------------
 
 
