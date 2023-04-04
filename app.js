@@ -109,11 +109,11 @@ function calculateMode(nums) {
  * Validate 'nums' query string argument. This argument must:
  * - Exist,
  * - Be nonempty,
- * - Contain only numbers, separated by commas (ex. nums=1,2,3,4).
+ * - Contain only numbers, separated by commas (ex. "1,2,3,4").
  *
  * Throw an ExpressError if any of the above conditions are not met.
  */
-function validateQueryString(qString) {
+function validateNumsQueryString(qString) {
 
     if (!qString) {
         throw new ExpressError("Query parameter 'nums' is required.", 400);
@@ -136,7 +136,7 @@ app.get("/mean", (req, res, next) => {
     const qString = req.query["nums"];
 
     try {
-        validateQueryString(qString);
+        validateNumsQueryString(qString);
     } catch(err) {
         return next(err);
     }
@@ -155,7 +155,7 @@ app.get("/median", (req, res, next) => {
     const qString = req.query["nums"];
 
     try {
-        validateQueryString(qString);
+        validateNumsQueryString(qString);
     } catch(err) {
         return next(err);
     }
@@ -174,7 +174,7 @@ app.get("/mode", (req, res, next) => {
     const qString = req.query["nums"];
 
     try {
-        validateQueryString(qString);
+        validateNumsQueryString(qString);
     } catch(err) {
         return next(err);
     }
@@ -218,5 +218,5 @@ module.exports = {
     calculateMean,
     calculateMedian,
     calculateMode,
-    validateQueryString
+    validateNumsQueryString
 };
