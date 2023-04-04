@@ -76,6 +76,30 @@ describe("Tests for calculateMedian function", () => {
         }).toThrow(TypeError);
     })
 
+    test("Should calculate median correctly for single element input", () => {
+        const res = calculateMedian([1]);
+        expect(res).toEqual(1);
+    })
+
+    test("Should calculate median correctly for sorted, even-length inputs", () => {
+        const res = calculateMedian([-10, -3, -1, 0, 3, 7]);
+        expect(res).toEqual(-0.5);
+    })
+
+    test("Should calculate median correctly for sorted, odd-length inputs", () => {
+        const res = calculateMedian([-10, -3, -1, 3, 7]);
+        expect(res).toEqual(-1);
+    })
+
+    test("Should calculate median correctly for unsorted, even-length inputs", () => {
+        const res = calculateMedian([2, -7, 3, -12]);
+        expect(res).toEqual(-2.5);
+    })
+
+    test("Should calculate median correctly for unsorted, odd-length inputs", () => {
+        const res = calculateMedian([2, -7, 5, 1, -13]);
+        expect(res).toEqual(1);
+    })
 })
 
 
@@ -87,6 +111,25 @@ describe("Tests for calculateMode function", () => {
         }).toThrow(TypeError);
     })
 
+    test("Should calculate mode correctly for single element input", () => {
+        const res = calculateMode([1]);
+        expect(res).toEqual(1);
+    })
+
+    test("Should calculate mode correctly for input with a single, clear mode", () => {
+        const res = calculateMode([-2, -3, -4, 1, 2, 2, 2, 7]);
+        expect(res).toEqual(2);
+    })
+
+    test("Should choose mode correctly for input with 2 modes of equal frequency", () => {
+        const res = calculateMode([-2, 7, -3, 7, -4, 7, 1, 2, 2, 2]);
+        expect(res).toEqual(7);
+    })
+
+    test("Should choose mode correctly for input with all numbers of equal frequency", () => {
+        const res = calculateMode([9, 1, 2, 3, 4, 5, 6]);
+        expect(res).toEqual(9);
+    })
 })
 
 
